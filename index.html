@@ -10,13 +10,25 @@
 <body>
   <h1>Welcome to Anusha Online Shop</h1>
 
-  <!-- Where products will show up -->
-  <div id="product-list"></div>
+  <!-- Admin Login Form -->
+  <div id="login-area">
+    <h3>Admin Login</h3>
+    <input id="username" placeholder="Username"><br><br>
+    <input id="password" placeholder="Password" type="password"><br><br>
+    <button onclick="login()">Login</button>
+  </div>
 
-  <!-- Button to add a product -->
-  <button onclick="showProductForm()">Add Product</button>
-  <div id="form-area"></div>
+  <!-- Add Product button (only visible to admin) -->
+  <div id="admin-controls" style="display:none;">
+    <button onclick="showProductForm()">Add Product</button>
+    <div id="form-area"></div>
+  </div>
+
+  <!-- Product Display Section -->
+  <h2>Products</h2>
+  <div id="product-list"></div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
