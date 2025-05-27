@@ -48,7 +48,9 @@ function showProductForm() {
       <option value="Cleansing Oil">Cleansing Oil</option>
       <option value="Cleansing Foam">Cleansing Foam</option>
     </select><br><br>
-    <input id="psocial" placeholder="Your Social Media"><br><br>
+    <input id="psocial" placeholder="Social Media Account"><br><br>
+    <input id="sellerName" placeholder="Your Full Name"><br><br>
+    <input id="sellerPhone" placeholder="Contact Number"><br><br>
     <input id="pimage" type="file" accept="image/*"><br><br>
     <button onclick="addProduct()">Add Product</button>
   `;
@@ -58,11 +60,13 @@ function addProduct() {
   const name = document.getElementById('pname').value.trim();
   const price = document.getElementById('pprice').value.trim();
   const social = document.getElementById('psocial').value.trim();
+  const sellerName = document.getElementById('sellerName').value.trim();
+  const sellerPhone = document.getElementById('sellerPhone').value.trim();
   const category = document.getElementById('pcategory').value;
   const imageFile = document.getElementById('pimage').files[0];
 
-  if (!name || !price || !imageFile || !social || !category) {
-    alert("Please fill all fields and select an image.");
+  if (!name || !price || !imageFile || !social || !sellerName || !sellerPhone) {
+    alert("Please fill all fields.");
     return;
   }
 
@@ -74,11 +78,13 @@ function addProduct() {
 
     const newProduct = {
       id: "product" + Date.now(),
-      name: name,
-      price: price,
+      name,
+      price,
       image: imageData,
-      social: social,
-      category: category
+      category,
+      social,
+      sellerName,
+      sellerPhone
     };
 
     let products = JSON.parse(localStorage.getItem("products")) || [];
@@ -94,7 +100,7 @@ function addProduct() {
 function displayAllProducts() {
   const listDiv = document.getElementById('product-list');
   listDiv.innerHTML = '';
-  let products = JSON.parse(localStorage.getItem("products")) || [];
+  const products = JSON.parse(localStorage.getItem("products")) || [];
   products.forEach(product => displayProduct(product));
 }
 
@@ -117,8 +123,13 @@ function displayProduct(product) {
   `;
 
   if (userRole === "admin") {
-    html += `<p><strong>Uploaded by:</strong> ${product.social || 'N/A'}</p>`;
-    html += `<button onclick="deleteProduct('${product.id}')">Delete Product</button>`;
+    html += `
+      <hr>
+      <p><strong>Uploaded by:</strong> ${product.social || 'N/A'}</p>
+      <p><strong>Name:</strong> ${product.sellerName || 'N/A'}</p>
+      <p><strong>Contact:</strong> ${product.sellerPhone || 'N/A'}</p>
+      <button onclick="deleteProduct('${product.id}')">Delete Product</button>
+    `;
   }
 
   productDiv.innerHTML = html;
@@ -127,22 +138,20 @@ function displayProduct(product) {
 
 function deleteProduct(productId) {
   let products = JSON.parse(localStorage.getItem("products")) || [];
-  const updatedProducts = products.filter(p => p.id !== productId);
-  localStorage.setItem("products", JSON.stringify(updatedProducts));
+  const updated = products.filter(p => p.id !== productId);
+  localStorage.setItem("products", JSON.stringify(updated));
   displayAllProducts();
 }
 
 function filterByCategory() {
   const selected = document.getElementById("categorySelect").value;
-  const products = document.querySelectorAll(".product");
-
-  products.forEach(product => {
+  document.querySelectorAll(".product").forEach(product => {
     const category = product.getAttribute("data-category");
     product.style.display = (selected === "all" || category === selected) ? "block" : "none";
   });
 }
 
-window.onload = function () {
+window.onload = () => {
   displayAllProducts();
   productCount = (JSON.parse(localStorage.getItem("products")) || []).length;
 };
