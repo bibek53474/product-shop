@@ -1,3 +1,4 @@
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -15,6 +16,7 @@ body {
     padding: 20px;
 }
 
+/* Typography */
 h1 {
     color: white;
     text-align: center;
@@ -23,6 +25,15 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+h2 {
+    color: white;
+    text-align: center;
+    margin: 30px 0;
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Login Area Styles */
 #login-area {
     background: white;
     padding: 40px;
@@ -41,6 +52,7 @@ h1 {
     font-weight: 300;
 }
 
+/* Form Elements */
 #role {
     width: 100%;
     padding: 12px;
@@ -72,6 +84,7 @@ h1 {
     border-color: #667eea;
 }
 
+/* Button Styles */
 button {
     width: 100%;
     padding: 12px;
@@ -94,6 +107,7 @@ button:active {
     transform: translateY(0);
 }
 
+/* Commission Agreement Area */
 #commission-area {
     background: white;
     padding: 30px;
@@ -116,6 +130,7 @@ button:active {
     margin-right: 10px;
 }
 
+/* Admin Controls */
 #admin-controls {
     background: white;
     padding: 30px;
@@ -126,14 +141,7 @@ button:active {
     margin-top: 20px;
 }
 
-h2 {
-    color: white;
-    text-align: center;
-    margin: 30px 0;
-    font-size: 2rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
+/* Product List */
 #product-list {
     background: white;
     padding: 30px;
@@ -144,10 +152,125 @@ h2 {
     min-height: 200px;
 }
 
-/* Responsive */
+/* Form Area */
+#form-area {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* Additional Form Styles */
+input[type="text"], 
+input[type="email"], 
+input[type="number"], 
+input[type="tel"], 
+textarea, 
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="number"]:focus, 
+input[type="tel"]:focus, 
+textarea:focus, 
+select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Product Card Styles */
+.product-card {
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.product-card h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.product-card p {
+    color: #666;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+/* Loading Spinner */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     h1 {
         font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
     }
     
     #login-area {
@@ -156,5 +279,26 @@ h2 {
     
     body {
         padding: 10px;
+    }
+    
+    #admin-controls,
+    #product-list,
+    #commission-area {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    #login-area {
+        padding: 25px 15px;
+    }
+    
+    button {
+        padding: 15px;
+        font-size: 16px;
     }
 }
