@@ -90,9 +90,7 @@ function addProduct() {
     let products = JSON.parse(localStorage.getItem("products")) || [];
     products.push(product);
     localStorage.setItem("products", JSON.stringify(products));
-    localStorage.setItem("lastSelectedCategory", category); // save selected
-
-    document.getElementById("categorySelect").value = category; // auto-select
+    localStorage.setItem("lastSelectedCategory", category);
     filterByCategory();
   };
 
@@ -139,7 +137,7 @@ function deleteProduct(productId) {
 
 function filterByCategory() {
   const selected = document.getElementById("categorySelect").value;
-  localStorage.setItem("lastSelectedCategory", selected); // save filter
+  localStorage.setItem("lastSelectedCategory", selected);
 
   const listDiv = document.getElementById("product-list");
   const title = document.getElementById("product-title");
