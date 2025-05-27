@@ -12,7 +12,6 @@ function login() {
     isLoggedIn = true;
     document.getElementById('login-area').style.display = "none";
     document.getElementById('admin-controls').style.display = "block";
-    filterByCategory(); // show product if admin selects category
   } else if (role === "seller" && username === "seller" && password === "1234") {
     userRole = "seller";
     document.getElementById('login-area').style.display = "none";
@@ -49,9 +48,9 @@ function showProductForm() {
       <option value="Cleansing Oil">Cleansing Oil</option>
       <option value="Cleansing Foam">Cleansing Foam</option>
     </select><br><br>
-    <input id="psocial" placeholder="Your Social Media"><br><br>
-    <input id="sellerName" placeholder="Full Name"><br><br>
-    <input id="sellerPhone" placeholder="Contact Number"><br><br>
+    <input id="psocial" placeholder="Social Media"><br><br>
+    <input id="sellerName" placeholder="Your Name"><br><br>
+    <input id="sellerPhone" placeholder="Phone Number"><br><br>
     <input id="pimage" type="file" accept="image/*"><br><br>
     <button onclick="addProduct()">Add Product</button>
   `;
@@ -66,7 +65,7 @@ function addProduct() {
   const sellerPhone = document.getElementById('sellerPhone').value.trim();
   const imageFile = document.getElementById('pimage').files[0];
 
-  if (!name || !price || !social || !sellerName || !sellerPhone || !imageFile) {
+  if (!name || !price || !category || !social || !sellerName || !sellerPhone || !imageFile) {
     alert("Please fill all fields.");
     return;
   }
@@ -88,7 +87,7 @@ function addProduct() {
     let products = JSON.parse(localStorage.getItem("products")) || [];
     products.push(newProduct);
     localStorage.setItem("products", JSON.stringify(products));
-    filterByCategory(); // refresh product view if category is still selected
+    filterByCategory(); // refresh product list
     document.getElementById('form-area').innerHTML = '';
   };
   reader.readAsDataURL(imageFile);
@@ -115,9 +114,9 @@ function displayProduct(product) {
   if (userRole === "admin") {
     html += `
       <hr>
-      <p><strong>Social:</strong> ${product.social || 'N/A'}</p>
-      <p><strong>Seller:</strong> ${product.sellerName || 'N/A'}</p>
-      <p><strong>Contact:</strong> ${product.sellerPhone || 'N/A'}</p>
+      <p><strong>Social:</strong> ${product.social}</p>
+      <p><strong>Seller:</strong> ${product.sellerName}</p>
+      <p><strong>Phone:</strong> ${product.sellerPhone}</p>
       <button onclick="deleteProduct('${product.id}')">Delete Product</button>
     `;
   }
@@ -130,7 +129,7 @@ function deleteProduct(productId) {
   let products = JSON.parse(localStorage.getItem("products")) || [];
   products = products.filter(p => p.id !== productId);
   localStorage.setItem("products", JSON.stringify(products));
-  filterByCategory(); // refresh after delete
+  filterByCategory();
 }
 
 function filterByCategory() {
@@ -146,13 +145,10 @@ function filterByCategory() {
 
   title.style.display = "block";
   let products = JSON.parse(localStorage.getItem("products")) || [];
-  products
-    .filter(p => p.category === selected)
-    .forEach(p => displayProduct(p));
+  products.filter(p => p.category === selected).forEach(p => displayProduct(p));
 }
 
 window.onload = function () {
-  // hide products on load
   document.getElementById("product-list").innerHTML = "";
   document.getElementById("product-title").style.display = "none";
 };
