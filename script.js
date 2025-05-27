@@ -37,17 +37,31 @@ function showProductForm() {
     <h3>Add New Product</h3>
     <input id="pname" placeholder="Product Name"><br><br>
     <input id="pprice" placeholder="Price" type="number"><br><br>
+    <select id="pcategory">
+      <option value="Toner">Toner</option>
+      <option value="Serum">Serum</option>
+      <option value="Snail Mucin">Snail Mucin</option>
+      <option value="Moisturiser">Moisturiser</option>
+      <option value="Sunscreen">Sunscreen</option>
+      <option value="Eye Cream">Eye Cream</option>
+      <option value="Retinal Serum">Retinal Serum</option>
+      <option value="Cleansing Oil">Cleansing Oil</option>
+      <option value="Cleansing Foam">Cleansing Foam</option>
+    </select><br><br>
+    <input id="psocial" placeholder="Your Social Media"><br><br>
     <input id="pimage" type="file" accept="image/*"><br><br>
-    <button onclick="addProduct()">Add Product to List</button>
+    <button onclick="addProduct()">Add Product</button>
   `;
 }
 
 function addProduct() {
   const name = document.getElementById('pname').value.trim();
   const price = document.getElementById('pprice').value.trim();
+  const social = document.getElementById('psocial').value.trim();
+  const category = document.getElementById('pcategory').value;
   const imageFile = document.getElementById('pimage').files[0];
 
-  if (!name || !price || !imageFile) {
+  if (!name || !price || !imageFile || !social || !category) {
     alert("Please fill all fields and select an image.");
     return;
   }
@@ -62,7 +76,9 @@ function addProduct() {
       id: "product" + Date.now(),
       name: name,
       price: price,
-      image: imageData
+      image: imageData,
+      social: social,
+      category: category
     };
 
     let products = JSON.parse(localStorage.getItem("products")) || [];
@@ -86,11 +102,13 @@ function displayProduct(product) {
   const productDiv = document.createElement('div');
   productDiv.className = 'product';
   productDiv.id = product.id;
+  productDiv.setAttribute("data-category", product.category);
 
   let html = `
     <img src="${product.image}" style="width:100%; border-radius:8px;">
     <h3>${product.name}</h3>
     <p>Price: Rs. ${product.price}</p>
+    <p><strong>Category:</strong> ${product.category}</p>
     <p><strong>To purchase:</strong></p>
     <ul>
       <li>Send Rs. ${product.price} to <strong>eSewa ID: 9811166382</strong></li>
@@ -99,6 +117,7 @@ function displayProduct(product) {
   `;
 
   if (userRole === "admin") {
+    html += `<p><strong>Uploaded by:</strong> ${product.social || 'N/A'}</p>`;
     html += `<button onclick="deleteProduct('${product.id}')">Delete Product</button>`;
   }
 
@@ -111,6 +130,16 @@ function deleteProduct(productId) {
   const updatedProducts = products.filter(p => p.id !== productId);
   localStorage.setItem("products", JSON.stringify(updatedProducts));
   displayAllProducts();
+}
+
+function filterByCategory() {
+  const selected = document.getElementById("categorySelect").value;
+  const products = document.querySelectorAll(".product");
+
+  products.forEach(product => {
+    const category = product.getAttribute("data-category");
+    product.style.display = (selected === "all" || category === selected) ? "block" : "none";
+  });
 }
 
 window.onload = function () {
