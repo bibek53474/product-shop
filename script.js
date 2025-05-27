@@ -1,6 +1,4 @@
-let productCount = parseInt(localStorage.getItem("productCount")) || 0;
 let userRole = "";
-let isLoggedIn = false;
 
 function login() {
   const username = document.getElementById('username').value;
@@ -9,7 +7,6 @@ function login() {
 
   if (role === "admin" && username === "admin" && password === "anusha@411") {
     userRole = "admin";
-    isLoggedIn = true;
     document.getElementById('login-area').style.display = "none";
     document.getElementById('admin-controls').style.display = "block";
   } else if (role === "seller" && username === "seller" && password === "1234") {
@@ -22,58 +19,64 @@ function login() {
 }
 
 function proceedAsSeller() {
-  const agreed = document.getElementById('agree-commission').checked;
-  if (!agreed) {
+  if (!document.getElementById('agree-commission').checked) {
     alert("You must agree to the commission before proceeding.");
     return;
   }
-  isLoggedIn = true;
   document.getElementById('commission-area').style.display = "none";
   document.getElementById('admin-controls').style.display = "block";
 }
 
 function showProductForm() {
   document.getElementById('form-area').innerHTML = `
-    <h3>Add New Product</h3>
-    <input id="pname" placeholder="Product Name"><br><br>
-    <input id="pprice" placeholder="Price" type="number"><br><br>
-    <select id="pcategory">
-      <option value="Toner">Toner</option>
-      <option value="Serum">Serum</option>
-      <option value="Snail Mucin">Snail Mucin</option>
-      <option value="Moisturiser">Moisturiser</option>
-      <option value="Sunscreen">Sunscreen</option>
-      <option value="Eye Cream">Eye Cream</option>
-      <option value="Retinal Serum">Retinal Serum</option>
-      <option value="Cleansing Oil">Cleansing Oil</option>
-      <option value="Cleansing Foam">Cleansing Foam</option>
-    </select><br><br>
-    <input id="psocial" placeholder="Social Media"><br><br>
-    <input id="sellerName" placeholder="Your Name"><br><br>
-    <input id="sellerPhone" placeholder="Phone Number"><br><br>
-    <input id="pimage" type="file" accept="image/*"><br><br>
-    <button onclick="addProduct()">Add Product</button>
+    <form id="productForm">
+      <h3>Add New Product</h3>
+      <input id="pname" placeholder="Product Name" required><br><br>
+      <input id="pprice" placeholder="Price" type="number" required><br><br>
+      <select id="pcategory" required>
+        <option value="">-- Select Category --</option>
+        <option value="Toner">Toner</option>
+        <option value="Serum">Serum</option>
+        <option value="Snail Mucin">Snail Mucin</option>
+        <option value="Moisturiser">Moisturiser</option>
+        <option value="Sunscreen">Sunscreen</option>
+        <option value="Eye Cream">Eye Cream</option>
+        <option value="Retinal Serum">Retinal Serum</option>
+        <option value="Cleansing Oil">Cleansing Oil</option>
+        <option value="Cleansing Foam">Cleansing Foam</option>
+      </select><br><br>
+      <input id="psocial" placeholder="Social Media" required><br><br>
+      <input id="sellerName" placeholder="Your Name" required><br><br>
+      <input id="sellerPhone" placeholder="Phone Number" required><br><br>
+      <input id="pimage" type="file" accept="image/*" required><br><br>
+      <button type="submit">Add Product</button>
+    </form>
   `;
+
+  document.getElementById("productForm").onsubmit = function (e) {
+    e.preventDefault();
+    addProduct();
+    this.reset();
+  };
 }
 
 function addProduct() {
-  const name = document.getElementById('pname').value.trim();
-  const price = document.getElementById('pprice').value.trim();
+  const name = document.getElementById('pname').value;
+  const price = document.getElementById('pprice').value;
   const category = document.getElementById('pcategory').value;
-  const social = document.getElementById('psocial').value.trim();
-  const sellerName = document.getElementById('sellerName').value.trim();
-  const sellerPhone = document.getElementById('sellerPhone').value.trim();
+  const social = document.getElementById('psocial').value;
+  const sellerName = document.getElementById('sellerName').value;
+  const sellerPhone = document.getElementById('sellerPhone').value;
   const imageFile = document.getElementById('pimage').files[0];
 
-  if (!name || !price || !category || !social || !sellerName || !sellerPhone || !imageFile) {
-    alert("Please fill all fields.");
+  if (!imageFile) {
+    alert("Please select an image.");
     return;
   }
 
   const reader = new FileReader();
-  reader.onload = function(event) {
-    const imageData = event.target.result;
-    const newProduct = {
+  reader.onload = function (event) {
+    const product = {
       id: "product" + Date.now(),
       name,
       price,
@@ -81,23 +84,22 @@ function addProduct() {
       social,
       sellerName,
       sellerPhone,
-      image: imageData
+      image: event.target.result
     };
 
     let products = JSON.parse(localStorage.getItem("products")) || [];
-    products.push(newProduct);
+    products.push(product);
     localStorage.setItem("products", JSON.stringify(products));
-    filterByCategory(); // refresh product list
-    document.getElementById('form-area').innerHTML = '';
+    filterByCategory();
   };
+
   reader.readAsDataURL(imageFile);
 }
 
 function displayProduct(product) {
-  const productDiv = document.createElement('div');
-  productDiv.className = 'product';
-  productDiv.id = product.id;
-  productDiv.setAttribute("data-category", product.category);
+  const div = document.createElement("div");
+  div.className = "product";
+  div.setAttribute("data-category", product.category);
 
   let html = `
     <img src="${product.image}" style="width:100%; border-radius:8px;">
@@ -121,8 +123,8 @@ function displayProduct(product) {
     `;
   }
 
-  productDiv.innerHTML = html;
-  document.getElementById('product-list').appendChild(productDiv);
+  div.innerHTML = html;
+  document.getElementById('product-list').appendChild(div);
 }
 
 function deleteProduct(productId) {
@@ -145,7 +147,9 @@ function filterByCategory() {
 
   title.style.display = "block";
   let products = JSON.parse(localStorage.getItem("products")) || [];
-  products.filter(p => p.category === selected).forEach(p => displayProduct(p));
+  products
+    .filter(p => p.category === selected)
+    .forEach(p => displayProduct(p));
 }
 
 window.onload = function () {
