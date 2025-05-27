@@ -12,6 +12,7 @@ function login() {
     isLoggedIn = true;
     document.getElementById('login-area').style.display = "none";
     document.getElementById('admin-controls').style.display = "block";
+    filterByCategory(); // show product if admin selects category
   } else if (role === "seller" && username === "seller" && password === "1234") {
     userRole = "seller";
     document.getElementById('login-area').style.display = "none";
@@ -48,8 +49,8 @@ function showProductForm() {
       <option value="Cleansing Oil">Cleansing Oil</option>
       <option value="Cleansing Foam">Cleansing Foam</option>
     </select><br><br>
-    <input id="psocial" placeholder="Social Media Account"><br><br>
-    <input id="sellerName" placeholder="Your Full Name"><br><br>
+    <input id="psocial" placeholder="Your Social Media"><br><br>
+    <input id="sellerName" placeholder="Full Name"><br><br>
     <input id="sellerPhone" placeholder="Contact Number"><br><br>
     <input id="pimage" type="file" accept="image/*"><br><br>
     <button onclick="addProduct()">Add Product</button>
@@ -59,13 +60,13 @@ function showProductForm() {
 function addProduct() {
   const name = document.getElementById('pname').value.trim();
   const price = document.getElementById('pprice').value.trim();
+  const category = document.getElementById('pcategory').value;
   const social = document.getElementById('psocial').value.trim();
   const sellerName = document.getElementById('sellerName').value.trim();
   const sellerPhone = document.getElementById('sellerPhone').value.trim();
-  const category = document.getElementById('pcategory').value;
   const imageFile = document.getElementById('pimage').files[0];
 
-  if (!name || !price || !imageFile || !social || !sellerName || !sellerPhone) {
+  if (!name || !price || !social || !sellerName || !sellerPhone || !imageFile) {
     alert("Please fill all fields.");
     return;
   }
@@ -73,35 +74,24 @@ function addProduct() {
   const reader = new FileReader();
   reader.onload = function(event) {
     const imageData = event.target.result;
-    productCount++;
-    localStorage.setItem("productCount", productCount);
-
     const newProduct = {
       id: "product" + Date.now(),
       name,
       price,
-      image: imageData,
       category,
       social,
       sellerName,
-      sellerPhone
+      sellerPhone,
+      image: imageData
     };
 
     let products = JSON.parse(localStorage.getItem("products")) || [];
     products.push(newProduct);
     localStorage.setItem("products", JSON.stringify(products));
-
-    displayAllProducts();
+    filterByCategory(); // refresh product view if category is still selected
     document.getElementById('form-area').innerHTML = '';
   };
   reader.readAsDataURL(imageFile);
-}
-
-function displayAllProducts() {
-  const listDiv = document.getElementById('product-list');
-  listDiv.innerHTML = '';
-  const products = JSON.parse(localStorage.getItem("products")) || [];
-  products.forEach(product => displayProduct(product));
 }
 
 function displayProduct(product) {
@@ -125,8 +115,8 @@ function displayProduct(product) {
   if (userRole === "admin") {
     html += `
       <hr>
-      <p><strong>Uploaded by:</strong> ${product.social || 'N/A'}</p>
-      <p><strong>Name:</strong> ${product.sellerName || 'N/A'}</p>
+      <p><strong>Social:</strong> ${product.social || 'N/A'}</p>
+      <p><strong>Seller:</strong> ${product.sellerName || 'N/A'}</p>
       <p><strong>Contact:</strong> ${product.sellerPhone || 'N/A'}</p>
       <button onclick="deleteProduct('${product.id}')">Delete Product</button>
     `;
@@ -138,20 +128,31 @@ function displayProduct(product) {
 
 function deleteProduct(productId) {
   let products = JSON.parse(localStorage.getItem("products")) || [];
-  const updated = products.filter(p => p.id !== productId);
-  localStorage.setItem("products", JSON.stringify(updated));
-  displayAllProducts();
+  products = products.filter(p => p.id !== productId);
+  localStorage.setItem("products", JSON.stringify(products));
+  filterByCategory(); // refresh after delete
 }
 
 function filterByCategory() {
   const selected = document.getElementById("categorySelect").value;
-  document.querySelectorAll(".product").forEach(product => {
-    const category = product.getAttribute("data-category");
-    product.style.display = (selected === "all" || category === selected) ? "block" : "none";
-  });
+  const listDiv = document.getElementById("product-list");
+  const title = document.getElementById("product-title");
+
+  listDiv.innerHTML = "";
+  if (!selected) {
+    title.style.display = "none";
+    return;
+  }
+
+  title.style.display = "block";
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  products
+    .filter(p => p.category === selected)
+    .forEach(p => displayProduct(p));
 }
 
-window.onload = () => {
-  displayAllProducts();
-  productCount = (JSON.parse(localStorage.getItem("products")) || []).length;
+window.onload = function () {
+  // hide products on load
+  document.getElementById("product-list").innerHTML = "";
+  document.getElementById("product-title").style.display = "none";
 };
