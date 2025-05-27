@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Product Shop with Roles</title>
+  <title>Product Shop with Categories</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,24 +20,41 @@
     <button onclick="login()">Login</button>
   </div>
 
-  <!-- Commission Agreement (Seller Only) -->
+  <!-- Seller Agreement -->
   <div id="commission-area" style="display:none;">
     <input type="checkbox" id="agree-commission">
     <label for="agree-commission">
-I agree to pay a 5% commission to the developer. The first payment from the buyer will be made directly to the developer, who will then transfer the remaining amount to me after deducting the commission.
+      I agree to pay a 5% commission to the developer. The first payment from the buyer will be made directly to the developer, who will then transfer the remaining amount to me after deducting the commission.
     </label><br><br>
     <button onclick="proceedAsSeller()">Proceed</button>
   </div>
 
-  <!-- Admin/Seller Controls -->
+  <!-- Upload Area -->
   <div id="admin-controls" style="display:none;">
     <button onclick="showProductForm()">Add Product</button>
     <div id="form-area"></div>
   </div>
 
+  <!-- Category Filter -->
+  <div id="category-filter">
+    <h3>Filter by Category</h3>
+    <select id="categorySelect" onchange="filterByCategory()">
+      <option value="all">All</option>
+      <option value="Toner">Toner</option>
+      <option value="Serum">Serum</option>
+      <option value="Snail Mucin">Snail Mucin</option>
+      <option value="Moisturiser">Moisturiser</option>
+      <option value="Sunscreen">Sunscreen</option>
+      <option value="Eye Cream">Eye Cream</option>
+      <option value="Retinal Serum">Retinal Serum</option>
+      <option value="Cleansing Oil">Cleansing Oil</option>
+      <option value="Cleansing Foam">Cleansing Foam</option>
+    </select>
+  </div>
+
   <h2>Products</h2>
   <div id="product-list"></div>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>
