@@ -90,6 +90,7 @@ function addProduct() {
     let products = JSON.parse(localStorage.getItem("products")) || [];
     products.push(product);
     localStorage.setItem("products", JSON.stringify(products));
+    localStorage.setItem("lastSelectedCategory", category); // remember last
     filterByCategory();
   };
 
@@ -136,6 +137,8 @@ function deleteProduct(productId) {
 
 function filterByCategory() {
   const selected = document.getElementById("categorySelect").value;
+  localStorage.setItem("lastSelectedCategory", selected); // save to localStorage
+
   const listDiv = document.getElementById("product-list");
   const title = document.getElementById("product-title");
 
@@ -147,12 +150,15 @@ function filterByCategory() {
 
   title.style.display = "block";
   let products = JSON.parse(localStorage.getItem("products")) || [];
-  products
-    .filter(p => p.category === selected)
-    .forEach(p => displayProduct(p));
+  products.filter(p => p.category === selected).forEach(p => displayProduct(p));
 }
 
 window.onload = function () {
-  document.getElementById("product-list").innerHTML = "";
-  document.getElementById("product-title").style.display = "none";
+  const previousCategory = localStorage.getItem("lastSelectedCategory");
+  if (previousCategory) {
+    document.getElementById("categorySelect").value = previousCategory;
+    filterByCategory();
+  } else {
+    document.getElementById("product-title").style.display = "none";
+  }
 };
