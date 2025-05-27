@@ -1,26 +1,37 @@
 let productCount = parseInt(localStorage.getItem("productCount")) || 0;
-let isAdmin = false;
+let userRole = "";
+let isLoggedIn = false;
 
-// Admin login function
 function login() {
-  const user = document.getElementById('username').value;
-  const pass = document.getElementById('password').value;
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const role = document.getElementById('role').value;
 
-  if (user === "admin" && pass === "1234") {
-    isAdmin = true;
+  if (role === "admin" && username === "admin" && password === "anusha@411") {
+    userRole = "admin";
+    isLoggedIn = true;
     document.getElementById('login-area').style.display = "none";
     document.getElementById('admin-controls').style.display = "block";
-    document.getElementById('form-area').style.display = "block";
-    // Optionally reload products to show delete buttons
-    document.getElementById('product-list').innerHTML = '';
-    let savedProducts = JSON.parse(localStorage.getItem("products")) || [];
-    savedProducts.forEach(p => displayProduct(p));
+  } else if (role === "seller" && username === "seller" && password === "1234") {
+    userRole = "seller";
+    document.getElementById('login-area').style.display = "none";
+    document.getElementById('commission-area').style.display = "block";
   } else {
-    alert("Access denied!");
+    alert("Invalid credentials!");
   }
 }
 
-// Show form to add product
+function proceedAsSeller() {
+  const agreed = document.getElementById('agree-commission').checked;
+  if (!agreed) {
+    alert("You must agree to the commission before proceeding.");
+    return;
+  }
+  isLoggedIn = true;
+  document.getElementById('commission-area').style.display = "none";
+  document.getElementById('admin-controls').style.display = "block";
+}
+
 function showProductForm() {
   document.getElementById('form-area').innerHTML = `
     <h3>Add New Product</h3>
@@ -31,7 +42,6 @@ function showProductForm() {
   `;
 }
 
-// Add product and save to localStorage
 function addProduct() {
   const name = document.getElementById('pname').value.trim();
   const price = document.getElementById('pprice').value.trim();
@@ -43,13 +53,13 @@ function addProduct() {
   }
 
   const reader = new FileReader();
-  reader.onload = function (event) {
+  reader.onload = function(event) {
     const imageData = event.target.result;
     productCount++;
     localStorage.setItem("productCount", productCount);
 
     const newProduct = {
-      id: "product" + productCount,
+      id: "product" + Date.now(), // Unique ID using timestamp
       name: name,
       price: price,
       image: imageData
@@ -59,13 +69,19 @@ function addProduct() {
     products.push(newProduct);
     localStorage.setItem("products", JSON.stringify(products));
 
-    displayProduct(newProduct);
+    displayAllProducts(); // Refresh display
     document.getElementById('form-area').innerHTML = '';
   };
   reader.readAsDataURL(imageFile);
 }
 
-// Display product with delete option only for admin
+function displayAllProducts() {
+  const listDiv = document.getElementById('product-list');
+  listDiv.innerHTML = ''; // Clear current display
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  products.forEach(product => displayProduct(product));
+}
+
 function displayProduct(product) {
   const productDiv = document.createElement('div');
   productDiv.className = 'product';
@@ -78,12 +94,11 @@ function displayProduct(product) {
     <p><strong>To purchase:</strong></p>
     <ul>
       <li>Send Rs. ${product.price} to <strong>eSewa ID: 9811166382</strong></li>
-      <li>Use the eSewa mobile app or website to make the payment</li>
-      <li>After sending, send a screenshot to <strong>anushapathak45@gmail.com</strong></li>
+      <li>Send screenshot to <strong>anushapathak45@gmail.com</strong></li>
     </ul>
   `;
 
-  if (isAdmin) {
+  if (userRole === "admin") {
     html += `<button onclick="deleteProduct('${product.id}')">Delete Product</button>`;
   }
 
@@ -91,21 +106,14 @@ function displayProduct(product) {
   document.getElementById('product-list').appendChild(productDiv);
 }
 
-// Delete a product from localStorage and UI
 function deleteProduct(productId) {
   let products = JSON.parse(localStorage.getItem("products")) || [];
-  products = products.filter(p => p.id !== productId);
-  localStorage.setItem("products", JSON.stringify(products));
-
-  const productElement = document.getElementById(productId);
-  if (productElement) {
-    productElement.remove();
-  }
+  const updatedProducts = products.filter(p => p.id !== productId);
+  localStorage.setItem("products", JSON.stringify(updatedProducts));
+  displayAllProducts();
 }
 
-// Load all products on page load
 window.onload = function () {
-  let savedProducts = JSON.parse(localStorage.getItem("products")) || [];
-  savedProducts.forEach(p => displayProduct(p));
-  productCount = savedProducts.length;
+  displayAllProducts();
+  productCount = (JSON.parse(localStorage.getItem("products")) || []).length;
 };
