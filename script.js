@@ -59,7 +59,7 @@ function addProduct() {
     localStorage.setItem("productCount", productCount);
 
     const newProduct = {
-      id: "product" + Date.now(), // Unique ID using timestamp
+      id: "product" + Date.now(),
       name: name,
       price: price,
       image: imageData
@@ -69,7 +69,7 @@ function addProduct() {
     products.push(newProduct);
     localStorage.setItem("products", JSON.stringify(products));
 
-    displayAllProducts(); // Refresh display
+    displayAllProducts();
     document.getElementById('form-area').innerHTML = '';
   };
   reader.readAsDataURL(imageFile);
@@ -77,7 +77,7 @@ function addProduct() {
 
 function displayAllProducts() {
   const listDiv = document.getElementById('product-list');
-  listDiv.innerHTML = ''; // Clear current display
+  listDiv.innerHTML = '';
   let products = JSON.parse(localStorage.getItem("products")) || [];
   products.forEach(product => displayProduct(product));
 }
