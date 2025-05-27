@@ -29,11 +29,14 @@ function proceedAsSeller() {
 
 function showProductForm() {
   document.getElementById('form-area').innerHTML = `
-    <form id="productForm">
+    <form id="productForm" method="POST" action="upload.php" enctype="multipart/form-data">
       <h3>Add New Product</h3>
-      <input id="pname" placeholder="Product Name" required><br><br>
-      <input id="pprice" placeholder="Price" type="number" required><br><br>
-      <select id="pcategory" required>
+
+      <input name="pname" id="pname" placeholder="Product Name" required><br><br>
+
+      <input name="pprice" id="pprice" placeholder="Price" type="number" required><br><br>
+
+      <select name="pcategory" id="pcategory" required>
         <option value="">-- Select Category --</option>
         <option value="Toner">Toner</option>
         <option value="Serum">Serum</option>
@@ -45,19 +48,18 @@ function showProductForm() {
         <option value="Cleansing Oil">Cleansing Oil</option>
         <option value="Cleansing Foam">Cleansing Foam</option>
       </select><br><br>
-      <input id="psocial" placeholder="Social Media" required><br><br>
-      <input id="sellerName" placeholder="Your Name" required><br><br>
-      <input id="sellerPhone" placeholder="Phone Number" required><br><br>
-      <input id="pimage" type="file" accept="image/*" required><br><br>
+
+      <input name="psocial" id="psocial" placeholder="Social Media" required><br><br>
+
+      <input name="sellerName" id="sellerName" placeholder="Your Name" required><br><br>
+
+      <input name="sellerPhone" id="sellerPhone" placeholder="Phone Number" required><br><br>
+
+      <input name="pimage" id="pimage" type="file" accept="image/*" required><br><br>
+
       <button type="submit">Add Product</button>
     </form>
   `;
-
-  document.getElementById("productForm").onsubmit = function (e) {
-    e.preventDefault();
-    addProduct();
-    this.reset();
-  };
 }
 
 function addProduct() {
