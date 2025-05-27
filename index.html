@@ -1,34 +1,43 @@
-<!-- force rebuild -->
-<!-- rebuild -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Product Shop</title>
+  <title>Product Shop with Roles</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Welcome to Anusha Online Shop</h1>
 
-  <!-- Admin Login Form -->
+  <!-- Login Area -->
   <div id="login-area">
-    <h3>Admin Login</h3>
+    <h3>Login</h3>
+    <select id="role">
+      <option value="admin">Admin</option>
+      <option value="seller">Seller</option>
+    </select><br><br>
     <input id="username" placeholder="Username"><br><br>
     <input id="password" placeholder="Password" type="password"><br><br>
     <button onclick="login()">Login</button>
   </div>
 
-  <!-- Add Product button (only visible to admin) -->
+  <!-- Commission Agreement (Only for Seller) -->
+  <div id="commission-area" style="display:none;">
+    <input type="checkbox" id="agree-commission">
+    <label for="agree-commission">
+      I agree to pay 5% commission to the website developer.
+    </label><br><br>
+    <button onclick="proceedAsSeller()">Proceed</button>
+  </div>
+
+  <!-- Admin/Seller Controls -->
   <div id="admin-controls" style="display:none;">
     <button onclick="showProductForm()">Add Product</button>
     <div id="form-area"></div>
   </div>
 
-  <!-- Product Display Section -->
   <h2>Products</h2>
   <div id="product-list"></div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
