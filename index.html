@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Product Shop with Categories</title>
+  <title>Product Shop</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,16 +20,16 @@
     <button onclick="login()">Login</button>
   </div>
 
-  <!-- Commission Agreement -->
+  <!-- Seller Agreement -->
   <div id="commission-area" style="display:none;">
     <input type="checkbox" id="agree-commission">
     <label for="agree-commission">
-      I agree to pay a 5% commission to the developer. The first payment from the buyer will be made directly to the developer, who will then transfer the remaining amount to me after deducting the commission.
+      I agree to pay 5% commission to the developer. Buyer will pay developer first, and developer will forward remaining amount.
     </label><br><br>
     <button onclick="proceedAsSeller()">Proceed</button>
   </div>
 
-  <!-- Admin/Seller Controls -->
+  <!-- Admin or Seller Controls -->
   <div id="admin-controls" style="display:none;">
     <button onclick="showProductForm()">Add Product</button>
     <div id="form-area"></div>
@@ -37,9 +37,9 @@
 
   <!-- Category Filter -->
   <div id="category-filter">
-    <h3>Filter by Category</h3>
+    <h3>Choose a Category to View Products</h3>
     <select id="categorySelect" onchange="filterByCategory()">
-      <option value="all">All</option>
+      <option value="">-- Select Category --</option>
       <option value="Toner">Toner</option>
       <option value="Serum">Serum</option>
       <option value="Snail Mucin">Snail Mucin</option>
@@ -52,9 +52,9 @@
     </select>
   </div>
 
-  <h2>Products</h2>
+  <h2 id="product-title" style="display:none;">Products</h2>
   <div id="product-list"></div>
 
-  <script src="script.js?v=7"></script>
+  <script src="script.js"></script>
 </body>
 </html>
