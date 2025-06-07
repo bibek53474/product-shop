@@ -5,7 +5,7 @@ function login() {
   const password = document.getElementById('password').value;
   const role = document.getElementById('role').value;
 
-  if (role === "admin" && username === "admin" && password === "anusha@411") {
+  if (role === "admin" && username === "admin" && password === "admin") {
     userRole = "admin";
     document.getElementById('login-area').style.display = "none";
     document.getElementById('admin-controls').style.display = "block";
@@ -111,8 +111,8 @@ function displayProduct(product) {
     <p><strong>Category:</strong> ${product.category}</p>
     <p><strong>To purchase:</strong></p>
     <ul>
-      <li>Send Rs. ${product.price} to <strong>eSewa ID: 9811166382</strong></li>
-      <li>Send screenshot to <strong>anushapathak45@gmail.com</strong></li>
+      <li>Send Rs. ${product.price} to <strong>eSewa ID: 9869364223</strong></li>
+      <li>Send screenshot to <strong>bibekbartaula311@gmail.com.com</strong></li>
     </ul>
   `;
 
